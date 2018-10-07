@@ -1,0 +1,3 @@
+[submodule "physics_h"]
+	path = physics_h
+	url = git@github.com:kiritofeng/physics_h.git
