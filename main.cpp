@@ -76,7 +76,7 @@ int main(){
     ball b2 = ball(vllf(11, 11), vllf(0, 0));
     vllf s = displacement(b1, b2);
     for(llf t = 0; t < END; t += DELTA_T) {
-        std::cout << b1.get_s().x << "\t" << b1.get_s().y << "\t";
+        std::cout << b1.get_s().x << "\t" << b1.get_s().y << "\t"
                   << b2.get_s().y << "\t" << b2.get_s().y << std::endl;
         s = displacement(b1, b2);
 
