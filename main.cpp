@@ -9,7 +9,7 @@ typedef long double llf;
 typedef vector<llf> vllf;
 
 // Simulation constants
-const llf DELTA_T = 1e-6;           // how much each increment of time is
+const llf DELTA_T = 1e-4;           // how much each increment of time is
 const llf END = 1.00;               // when simulation ends, in seconds
 
 // Ball constants
@@ -63,21 +63,42 @@ class ball {
         }
 
 };
+/**
+    Helper method to check if two balls are in contact
+
+    @param b1 the first ball
+    @param b2 the second ball
+    @returns true if the two balls are in contact (distance between centres is 2 x RADIUS
+             and false otherwise
+ */
 inline bool in_contact(const ball &b1, const ball &b2) {
     return (b1.get_s() - b2.get_s()).magnitude() <= 4*RADIUS*RADIUS;
 }
 
+/**
+    Helper method that returns the displacement between the centres of the balls
+
+    @param b1 the first ball
+    @param b2 the second ball
+    @returns the displacement between the two balls, based on the difference of `get_s()`
+*/
 inline vllf displacement(ball b1, ball b2) {
     return b1.get_s() - b2.get_s();
 }
 
 int main(){
+    // initialize the two balls
     ball b1 = ball(vllf(0, 0), vllf(5, 0));
     ball b2 = ball(vllf(0.2, 0), vllf(0, 0));
+    // run the simulation, recomputing the values every DELTA_T
     for(llf t = 0; t < END; t += DELTA_T) {
-        std::cout << b1.get_s().x << "\t" << b1.get_s().y << "\t"
-                  << b2.get_s().x << "\t" << b2.get_s().y << std::endl;
+        // print the displacements, separated by commas
+        // this is the output format for .csv files
+        // because screw Microsoft software formats *cough* xlsx *cough*
+        std::cout << b1.get_s().x << "," << b1.get_s().y << ","
+                  << b2.get_s().x << "," << b2.get_s().y << std::endl;
 
+        // boolean to store if the balls are in contact
         bool contact = in_contact(b1, b2);
         if(contact) {
             // get the change in displacement
@@ -85,9 +106,12 @@ int main(){
             // get the spring force
             vllf f_s_1 = b1.spring_force(delta_s * 0.5);
             vllf f_s_2 = b2.spring_force(-delta_s * 0.5);
+            // apply Newton's 2nd law to get the acceleration
+            // and update the balls
             b1.update(f_s_1 * (1 / b1.get_mass()));
             b2.update(f_s_2 * (1 / b2.get_mass()));
         } else {
+            // acceleration does not change, just advance the simulation
             b1.advance();
             b2.advance();
         }
