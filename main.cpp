@@ -13,8 +13,8 @@ const llf DELTA_T = 1e-4;           // how much each increment of time is
 const llf END = 1.00;               // when simulation ends, in seconds
 
 // Ball constants
-const llf RADIUS = 0.05;            // radius of ball, in metres
-const llf MASS = 1.00;              // mass of ball, in kg
+const llf RADIUS = 0.03;            // radius of ball, in metres
+const llf MASS = 0.1;               // mass of ball, in kg
 
 class ball {
     private:
@@ -32,7 +32,7 @@ class ball {
 
         // the spring force
         inline static vllf spring_force (vllf x) {
-            return x * -9001;
+            return x * -1500;
         }
 
         // return displacement
@@ -68,7 +68,7 @@ class ball {
 
     @param b1 the first ball
     @param b2 the second ball
-    @returns true if the two balls are in contact (distance between centres is 2 x RADIUS
+    @return true if the two balls are in contact (distance between centres is 2 x RADIUS
              and false otherwise
  */
 inline bool in_contact(const ball &b1, const ball &b2) {
@@ -76,11 +76,11 @@ inline bool in_contact(const ball &b1, const ball &b2) {
 }
 
 /**
-    Helper method that returns the displacement between the centres of the balls
+    Helper method that return the displacement between the centres of the balls
 
     @param b1 the first ball
     @param b2 the second ball
-    @returns the displacement between the two balls, based on the difference of `get_s()`
+    @return the displacement between the two balls, based on the difference of `get_s()`
 */
 inline vllf displacement(ball b1, ball b2) {
     return b1.get_s() - b2.get_s();
@@ -88,8 +88,8 @@ inline vllf displacement(ball b1, ball b2) {
 
 int main(){
     // initialize the two balls
-    ball b1 = ball(vllf(0, 0), vllf(5, 0));
-    ball b2 = ball(vllf(0.2, 0), vllf(0, 0));
+    ball b1 = ball(vllf(0, 0.02), vllf(5, 0));
+    ball b2 = ball(vllf(0.2, 0), vllf(2, 0.2));
     // run the simulation, recomputing the values every DELTA_T
     for(llf t = 0; t < END; t += DELTA_T) {
         // print the displacements, separated by commas
@@ -102,10 +102,10 @@ int main(){
         bool contact = in_contact(b1, b2);
         if(contact) {
             // get the change in displacement
-            vllf delta_s = displacement(b1,b2).normalize() * (RADIUS * RADIUS) - displacement(b1, b2);
+            vllf delta_s = displacement(b1,b2).normalize() * (RADIUS + RADIUS) - displacement(b1, b2);
             // get the spring force
-            vllf f_s_1 = b1.spring_force(delta_s * 0.5);
-            vllf f_s_2 = b2.spring_force(-delta_s * 0.5);
+            vllf f_s_1 = b1.spring_force(-delta_s * 0.5);
+            vllf f_s_2 = b2.spring_force(delta_s * 0.5);
             // apply Newton's 2nd law to get the acceleration
             // and update the balls
             b1.update(f_s_1 * (1 / b1.get_mass()));
