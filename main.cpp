@@ -10,11 +10,11 @@ typedef vector<llf> vllf;
 
 // Simulation constants
 const llf DELTA_T = 1e-6;           // how much each increment of time is
-const llf END = 30.0;               // when simulation ends, in seconds
+const llf END = 1.00;               // when simulation ends, in seconds
 
 // Ball constants
 const llf RADIUS = 0.05;            // radius of ball, in metres
-const llf MASS = 0.05;              // mass of ball, in kg
+const llf MASS = 1.00;              // mass of ball, in kg
 
 class ball {
     private:
@@ -32,7 +32,7 @@ class ball {
 
         // the spring force
         inline static vllf spring_force (vllf x) {
-            return x * -1.0;
+            return x * -9001;
         }
 
         // return displacement
@@ -72,18 +72,16 @@ inline vllf displacement(ball b1, ball b2) {
 }
 
 int main(){
-    ball b1 = ball(vllf(0, 0), vllf(0, 0));
-    ball b2 = ball(vllf(11, 11), vllf(0, 0));
-    vllf s = displacement(b1, b2);
+    ball b1 = ball(vllf(0, 0), vllf(5, 0));
+    ball b2 = ball(vllf(0.2, 0), vllf(0, 0));
     for(llf t = 0; t < END; t += DELTA_T) {
         std::cout << b1.get_s().x << "\t" << b1.get_s().y << "\t"
-                  << b2.get_s().y << "\t" << b2.get_s().y << std::endl;
-        s = displacement(b1, b2);
+                  << b2.get_s().x << "\t" << b2.get_s().y << std::endl;
 
         bool contact = in_contact(b1, b2);
         if(contact) {
             // get the change in displacement
-            vllf delta_s = s - displacement(b1, b2);
+            vllf delta_s = displacement(b1,b2).normalize() * (RADIUS * RADIUS) - displacement(b1, b2);
             // get the spring force
             vllf f_s_1 = b1.spring_force(delta_s * 0.5);
             vllf f_s_2 = b2.spring_force(-delta_s * 0.5);
