@@ -31,11 +31,11 @@ class ball {
         llf mass;
 
     public:
-        ball(vllf _s, vllf _v) : s(_s), v(_v), a(0, 0), omega(0, 0), alpha(0, 0), radius(RADIUS), mass(MASS) {}
+        ball(vllf _s, vllf _v, llf m) : s(_s), v(_v), a(0, 0), omega(0, 0), alpha(0, 0), radius(RADIUS), mass(m) {}
 
         // the spring force
         inline static vllf spring_force (vllf x) {
-            return x * -6.5;
+            return x * -6500;
         }
 
         // return displacement
@@ -136,8 +136,8 @@ int main(){
     // initialize the two balls
     //ball b1 = ball(vllf(0, 0.02), vllf(5, 0));
     //ball b2 = ball(vllf(0.2, 0), vllf(2, 0.2));
-    ball b1 = ball(vllf(0, 0), vllf(5, 0));
-    ball b2 = ball(vllf(1, 0), vllf(0,0));
+    ball b1 = ball(vllf(0, 0), vllf(2, 0),0.3);
+    ball b2 = ball(vllf(1, 0), vllf(-2,0),0.1);
     // displacement between balls
     vllf s = displacement(b1, b2);
     // kinetic energy of balls
@@ -148,10 +148,9 @@ int main(){
         // print the displacements, separated by commas
         // this is the output format for .csv files
         // because screw Microsoft software formats *cough* xlsx *cough*
-        std::cout << b1.get_s().x << "," << b1.get_s().y << ","
+        std::cout << t << ","
+                  << b1.get_s().x << "," << b1.get_s().y << ","
                   << b2.get_s().x << "," << b2.get_s().y << ","
-                  << b1.get_v().x << "," << b2.get_v().x << ","
-                  << b1.get_a().x << "," << b2.get_a().x << ","
                   << b1.get_omega() << "," << b2.get_omega() << std::endl;
 
         // boolean to store if the balls are in contact
