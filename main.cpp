@@ -47,6 +47,11 @@ class ball {
         inline vllf get_v() const {
             return v;
         }
+        
+        // return acceleration
+        inline vllf get_a() const {
+            return a;
+        }
 
         // update acceleration of ball
         inline void update1(vllf _a) {
@@ -54,7 +59,7 @@ class ball {
         }
 
         // update angular acceleration of ball
-        inline void update2( vllf _alpha) {
+        inline void update2(vllf _alpha) {
             alpha = _alpha;
         }
 
@@ -129,8 +134,10 @@ inline llf moment(ball b){
 }
 int main(){
     // initialize the two balls
-    ball b1 = ball(vllf(0, 0.02), vllf(5, 0));
-    ball b2 = ball(vllf(0.2, 0), vllf(2, 0.2));
+    //ball b1 = ball(vllf(0, 0.02), vllf(5, 0));
+    //ball b2 = ball(vllf(0.2, 0), vllf(2, 0.2));
+    ball b1 = ball(vllf(0, 0), vllf(5, 0));
+    ball b2 = ball(vllf(1, 0), vllf(0,0));
     // displacement between balls
     vllf s = displacement(b1, b2);
     // kinetic energy of balls
@@ -143,6 +150,8 @@ int main(){
         // because screw Microsoft software formats *cough* xlsx *cough*
         std::cout << b1.get_s().x << "," << b1.get_s().y << ","
                   << b2.get_s().x << "," << b2.get_s().y << ","
+                  << b1.get_v().x << "," << b2.get_v().x << ","
+                  << b1.get_a().x << "," << b2.get_a().x << ","
                   << b1.get_omega() << "," << b2.get_omega() << std::endl;
 
         // boolean to store if the balls are in contact
@@ -156,9 +165,9 @@ int main(){
             // apply Newton's 2nd law to get the acceleration
             // update the balls' acceleration
             b1.update1(f_s_1 * (1 / b1.get_mass()));
-            b2.update2(f_s_2 * (1 / b2.get_mass()));
+            b2.update1(f_s_2 * (1 / b2.get_mass()));
             b1.advance1();
-            b2.advance2();
+            b2.advance1();
             // now for the rotational part
             // first, get the change in displacement
             vllf delta_s = displacement(b1, b2) - s;
@@ -187,7 +196,11 @@ int main(){
             b1.advance2();
             b2.advance2();
         } else {
-            // acceleration does not change, just advance the simulation
+            // acceleration is 0, just advance the simulation
+            b1.update1(vllf(0,0));
+            b1.update2(vllf(0,0));
+            b2.update1(vllf(0,0));
+            b2.update2(vllf(0,0));
             b1.advance1();
             b1.advance2();
             b2.advance1();
