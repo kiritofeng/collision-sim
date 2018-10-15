@@ -9,7 +9,7 @@ typedef long double llf;
 typedef vector<llf> vllf;
 
 // Simulation constants
-const llf DELTA_T = 1e-4;           // how much each increment of time is
+const llf DELTA_T = 2e-5;           // how much each increment of time is
 const llf END = 1.00;               // when simulation ends, in seconds
 
 // Ball constants
@@ -35,7 +35,7 @@ class ball {
 
         // the spring force
         inline static vllf spring_force (vllf x) {
-            return x * -1500;
+            return x * -6.5;
         }
 
         // return displacement
