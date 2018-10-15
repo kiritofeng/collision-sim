@@ -30,3 +30,8 @@
 *.exe
 *.out
 *.app
+
+# Excel files (output)
+*.xlsx
+*.xls
+*.csv
